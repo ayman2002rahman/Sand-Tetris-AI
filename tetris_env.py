@@ -13,6 +13,12 @@ class Color(IntEnum):
     PURPLE = auto()
     ORANGE = auto()
 
+    @classmethod
+    def random_color(cls):
+        return random.choice(list(cls))
+        
+        
+
 class Pixel():
 
     def __init__(self, color, rgb, position):
@@ -22,17 +28,21 @@ class Pixel():
 
 class Tetris_Env():
 
+    tetrominoe_set = set()
+
     def __init__(self, position, size):
-        #sand will contain only the current sand pixels
         self.position = position
         self.size = size
+        #sand will contain only the current sand pixels
         self.sand = [[None for j in range(self.size[0])] for i in range(self.size[1])]
-        for i in range(0, 50, 2):
-            for j in range(0, 50, 2):
-                self.sand[i][j] = Pixel(Color.BLUE, (0, 0, 255), (j, i))
+        block_color = Color.random_color()
+        print(block_color)
+        color_rgb = {1: (53, 89, 144), 2: (164, 65, 47), 3: (97, 152, 74), 4: (204, 154, 52), 5: (145, 128, 196), 6: (255, 127, 39)}
+        for i in range(0, 50):
+            for j in range(0, 50):
+                self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
         self.tetrominoe = None
         self.next_tetrominoe = None
-        
 
     def reset(self):
         pass

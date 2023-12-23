@@ -3,7 +3,7 @@ import sys
 from tetris_env import Tetris_Env, CELL_SIZE
 
 DISPLAY_SIZE = (1000, 1000)
-GAME_POSITION = (300, 200)
+GAME_POSITION = (150, 200)
 WIDTH = 100
 HEIGHT = 160
 BORDER_THICKNESS = 5
@@ -14,7 +14,10 @@ pygame.display.set_caption("Sand Tetris AI")
 clock = pygame.time.Clock()
 
 def draw_game(env):
+    pygame.draw.rect(screen, (232, 150, 101), (0, 0, DISPLAY_SIZE[0], DISPLAY_SIZE[1]))
+    # border?
     pygame.draw.rect(screen, (255, 255, 255), (env.position[0]-BORDER_THICKNESS, env.position[1]-BORDER_THICKNESS, 2*BORDER_THICKNESS+env.size[0]*CELL_SIZE, 2*BORDER_THICKNESS+env.size[1]*CELL_SIZE))
+    #playable area?
     pygame.draw.rect(screen, (0, 0, 0), (env.position[0], env.position[1], env.size[0]*CELL_SIZE, env.size[1]*CELL_SIZE))
     for y in range(env.size[1]):
         for x in range(env.size[0]):
@@ -32,7 +35,6 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-        screen.fill((0, 0, 0))
         draw_game(env)
         env.step(None)
         pygame.display.flip()
