@@ -3,9 +3,9 @@ from enum import IntEnum, auto
 import random
 import numpy as np
 
-WIDTH = 500
-HEIGHT = 1000
-CELL_SIZE = 10
+WIDTH = 100
+HEIGHT = 100
+CELL_SIZE = 5
 
 class Color(IntEnum):
     BLUE = auto()
@@ -27,7 +27,7 @@ class Tetris_Env():
     def __init__(self):
         #sand will contain only the current sand pixels
         self.sand = [[None for j in range(WIDTH)] for i in range(HEIGHT)]
-        for i in range(0, 100, 2):
+        for i in range(0, 50, 2):
             for j in range(0, 50, 2):
                 self.sand[i][j] = Pixel(Color.BLUE, (0, 0, 255), (j, i))
 
