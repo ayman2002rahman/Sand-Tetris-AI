@@ -38,8 +38,11 @@ class Tetris_Env():
         block_color = Color.random_color()
         print(block_color)
         color_rgb = {1: (53, 89, 144), 2: (164, 65, 47), 3: (97, 152, 74), 4: (204, 154, 52), 5: (145, 128, 196), 6: (255, 127, 39)}
-        for i in range(0, 50):
-            for j in range(0, 50):
+        for i in range(0, 12):
+            for j in range(12, 24):
+                self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+        for i in range(12, 25):
+            for j in range(0, 36):
                 self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
         self.tetrominoe = None
         self.next_tetrominoe = None
