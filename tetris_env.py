@@ -3,9 +3,7 @@ from enum import IntEnum, auto
 import random
 import numpy as np
 
-WIDTH = 100
-HEIGHT = 100
-CELL_SIZE = 5
+CELL_SIZE = 4
 
 class Color(IntEnum):
     BLUE = auto()
@@ -24,12 +22,17 @@ class Pixel():
 
 class Tetris_Env():
 
-    def __init__(self):
+    def __init__(self, position, size):
         #sand will contain only the current sand pixels
-        self.sand = [[None for j in range(WIDTH)] for i in range(HEIGHT)]
+        self.position = position
+        self.size = size
+        self.sand = [[None for j in range(self.size[0])] for i in range(self.size[1])]
         for i in range(0, 50, 2):
             for j in range(0, 50, 2):
                 self.sand[i][j] = Pixel(Color.BLUE, (0, 0, 255), (j, i))
+        self.tetrominoe = None
+        self.next_tetrominoe = None
+        
 
     def reset(self):
         pass
@@ -49,7 +52,7 @@ class Tetris_Env():
             self.sand[y][x] = pixel
 
         def empty(x, y):
-            return x >= 0 and x < WIDTH and y >= 0 and y < HEIGHT and self.sand[y][x] is None
+            return x >= 0 and x < self.size[0] and y >= 0 and y < self.size[1] and self.sand[y][x] is None
 
         def update_cell(x, y):
             pixel = self.sand[y][x]
@@ -76,6 +79,6 @@ class Tetris_Env():
         def check_match(): # this helper function will help find a connection path from both ends to determine a match ha sbeen made
             pass
 
-        for y in range(HEIGHT-1, -1, -1):
-            for x in range(WIDTH-1, -1, -1):
+        for y in range(self.size[1]-1, -1, -1):
+            for x in range(self.size[0]-1, -1, -1):
                 update_cell(x, y)
