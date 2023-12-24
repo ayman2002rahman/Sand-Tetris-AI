@@ -26,6 +26,27 @@ class Pixel():
         self.rgb = rgb
         self.position = position # (x, y) tuple
 
+# Tried to make a tetrominoe class but didn't really work
+# class Tetrominoe():
+
+#     def __init__(self, size):
+#         # self.block = random.choice['O', 'L', 'J', 'T', 'I', 'S', 'Z']
+#         self.block = 'T'
+#         self.size = size
+#         #sand will contain only the current sand pixels
+#         self.sand = [[None for j in range(self.size[0])] for i in range(self.size[1])]
+
+#     def draw_block(self):
+#         block_color = Color.random_color()
+#         color_rgb = {1: (53, 89, 144), 2: (164, 65, 47), 3: (97, 152, 74), 4: (204, 154, 52), 5: (145, 128, 196), 6: (255, 127, 39)}
+#         if self.block == 'T':
+#             for i in range(0, 12):
+#                 for j in range(44, 56):
+#                     self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+#             for i in range(12, 25):
+#                 for j in range(32, 68):
+#                     self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+
 class Tetris_Env():
 
     tetrominoe_set = set()
@@ -35,15 +56,55 @@ class Tetris_Env():
         self.size = size
         #sand will contain only the current sand pixels
         self.sand = [[None for j in range(self.size[0])] for i in range(self.size[1])]
+        TETROMINOE_SIZE = 12 # even number please
+        # default block:
         block_color = Color.random_color()
-        print(block_color)
         color_rgb = {1: (53, 89, 144), 2: (164, 65, 47), 3: (97, 152, 74), 4: (204, 154, 52), 5: (145, 128, 196), 6: (255, 127, 39)}
-        for i in range(0, 12):
-            for j in range(12, 24):
-                self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
-        for i in range(12, 25):
-            for j in range(0, 36):
-                self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+        tetrominoe = random.choice(['O', 'L', 'J', 'T', 'I', 'S', 'Z'])
+        if tetrominoe == 'O':
+            for i in range(0, TETROMINOE_SIZE*2):
+                for j in range(int(size[0]/2) - TETROMINOE_SIZE, int(size[0]/2) + TETROMINOE_SIZE):
+                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+        elif tetrominoe == 'L':
+            for i in range(0, TETROMINOE_SIZE*3):
+                for j in range(int(size[0]/2) - TETROMINOE_SIZE, int(size[0]/2)):
+                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+            for i in range(TETROMINOE_SIZE*2, TETROMINOE_SIZE*3):
+                for j in range(int(size[0]/2), int(size[0]/2) + TETROMINOE_SIZE):
+                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+        elif tetrominoe == 'J':
+            for i in range(0, TETROMINOE_SIZE*3):
+                for j in range(int(size[0]/2), int(size[0]/2) + TETROMINOE_SIZE):
+                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+            for i in range(TETROMINOE_SIZE*2, TETROMINOE_SIZE*3):
+                for j in range(int(size[0]/2) - TETROMINOE_SIZE, int(size[0]/2)):
+                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+        elif tetrominoe == 'T':
+            for i in range(0, TETROMINOE_SIZE):
+                for j in range(int(size[0]/2) - int(TETROMINOE_SIZE/2), int(size[0]/2) + int(TETROMINOE_SIZE/2)):
+                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+            for i in range(TETROMINOE_SIZE, (TETROMINOE_SIZE*2)+1):
+                for j in range(int(size[0]/2) - int(TETROMINOE_SIZE*3/2), int(size[0]/2) + int(TETROMINOE_SIZE*3/2)):
+                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+        elif tetrominoe == 'I':
+            for i in range(0, TETROMINOE_SIZE*4):
+                for j in range(int(size[0]/2) - int(TETROMINOE_SIZE/2), int(size[0]/2) + int(TETROMINOE_SIZE/2)):
+                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+        elif tetrominoe == 'S':
+            for i in range(0, TETROMINOE_SIZE):
+                for j in range(int(size[0]/2) - int(TETROMINOE_SIZE/2), int(size[0]/2) + int(TETROMINOE_SIZE*3/2)):
+                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+            for i in range(TETROMINOE_SIZE, TETROMINOE_SIZE*2):
+                for j in range(int(size[0]/2) - int(TETROMINOE_SIZE*3/2), int(size[0]/2) + int(TETROMINOE_SIZE/2)):
+                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+        elif tetrominoe == 'Z':
+            for i in range(0, TETROMINOE_SIZE):
+                for j in range(int(size[0]/2) - int(TETROMINOE_SIZE*3/2), int(size[0]/2) + int(TETROMINOE_SIZE/2)):
+                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+            for i in range(TETROMINOE_SIZE, TETROMINOE_SIZE*2):
+                for j in range(int(size[0]/2) - int(TETROMINOE_SIZE/2), int(size[0]/2) + int(TETROMINOE_SIZE*3/2)):
+                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+
         self.tetrominoe = None
         self.next_tetrominoe = None
 
