@@ -21,10 +21,17 @@ def draw_game(env):
             pygame.draw.rect(screen, (243, 184, 136), (j+50, i, 50, 50))
             pygame.draw.rect(screen, (243, 184, 136), (j, i+50, 50, 50))
             pygame.draw.rect(screen, (232, 150, 101), (j+50, i+50, 50, 50))
+
+    # Logo:
+    image = pygame.image.load('Logo.png')
+    screen.blit(image, (250, 75))
+    # shadow: 
+    pygame.draw.rect(screen, (61, 61, 61), (env.position[0]+10, env.position[1]+10, env.size[0]*CELL_SIZE, env.size[1]*CELL_SIZE))
     # border:
     pygame.draw.rect(screen, (255, 255, 255), (env.position[0]-BORDER_THICKNESS, env.position[1]-BORDER_THICKNESS, 2*BORDER_THICKNESS+env.size[0]*CELL_SIZE, 2*BORDER_THICKNESS+env.size[1]*CELL_SIZE))
     # playable area:
     pygame.draw.rect(screen, (0, 0, 0), (env.position[0], env.position[1], env.size[0]*CELL_SIZE, env.size[1]*CELL_SIZE))
+    
     for y in range(env.size[1]):
         for x in range(env.size[0]):
             if env.sand[y][x] is not None:
