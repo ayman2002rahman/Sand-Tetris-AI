@@ -18,12 +18,9 @@ def draw_game(env):
     for i in range(0, DISPLAY_SIZE[1], 100):
         for j in range(0, DISPLAY_SIZE[0], 100):
             pygame.draw.rect(screen, (232, 150, 101), (j, i, 50, 50))
-        for j in range(50, DISPLAY_SIZE[0], 100):
-            pygame.draw.rect(screen, (243, 184, 136), (j, i, 50, 50))
-        for j in range(0, DISPLAY_SIZE[0], 100):
+            pygame.draw.rect(screen, (243, 184, 136), (j+50, i, 50, 50))
             pygame.draw.rect(screen, (243, 184, 136), (j, i+50, 50, 50))
-        for j in range(50, DISPLAY_SIZE[0], 100):
-            pygame.draw.rect(screen, (232, 150, 101), (j, i+50, 50, 50))
+            pygame.draw.rect(screen, (232, 150, 101), (j+50, i+50, 50, 50))
     # border:
     pygame.draw.rect(screen, (255, 255, 255), (env.position[0]-BORDER_THICKNESS, env.position[1]-BORDER_THICKNESS, 2*BORDER_THICKNESS+env.size[0]*CELL_SIZE, 2*BORDER_THICKNESS+env.size[1]*CELL_SIZE))
     # playable area:
