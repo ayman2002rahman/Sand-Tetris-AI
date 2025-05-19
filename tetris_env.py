@@ -6,6 +6,14 @@ import random
 
 CELL_SIZE = 4
         
+ACTIONS = [
+    "right",
+    "left",
+    "down",
+    "rotate",
+    "none"
+]
+
 class Pixel():
 
     def __init__(self, color, color_class, position):
@@ -40,6 +48,32 @@ class Tetris_Env():
 
     def pixel_at(self, x, y): # helper function to get the sandf pizxel at i=y and j=x
         return self.sand[y][x]
+
+    def valid_actions(self):
+        valid_actions = ["none", "rotate"]
+
+        # check left
+        left_x = self.tetromino.left_most_x()
+        if left_x > 0:
+            valid_actions.append('left')
+        
+        # check right
+        right_x = self.tetromino.right_most_x()
+        if right_x < self.size[0] - 1:
+            valid_actions.append('right')
+
+        # check down
+        # def check_down():
+        #     for x, y in self.tetromino.get_pixels():
+        #         for dx, dy in [(0, 1)]:
+        #             nx, ny = x + dx, y + dy
+        #             if ny >= self.size[1]:
+        #                 return True
+        #         if 0 <= nx and nx < self.size[0] and self.pixel_at(nx, ny):
+        #             return True
+        #     return False      
+
+        return valid_actions
 
     def step(self, action):
         # 1.) handle action logic
