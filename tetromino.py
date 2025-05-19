@@ -45,12 +45,13 @@ class Tetromino_Shapes(Enum):
         return random.choice(list(cls))
 
 class Tetromino:
-    def __init__(self, position):
+    def __init__(self, position, grid_width):
         self.position = position
         self.shape = Tetromino_Shapes.random_shape()
         for _ in range(random.randint(3)):
             self.rotate()
         self.color = Color.random_color()
+        self.grid_width = grid_width
 
     # will need to add logic to ensure that tetromino after rotation does not exit side boundaries
     # while trtromino too far right, shift it left
@@ -60,6 +61,30 @@ class Tetromino:
         t = self.shape.copy()
         t = [list(row) for row in zip(*t[::-1])]
         self.shape = t.copy()
+
+        right_block = 0
+        for block_x in range(len(self.shape[0]), -1, -1):
+            for block_y in range(len(self.shape)):
+                if self.shape[block_y][block_x]:
+                    right_block = block_x
+                    break
+        right_x = self.x + right_block * 8 + 7
+
+        if right_x >= self.grid_width:
+            while right_x >= self.grid_width:
+                self.x -= 1
+                right_x -= 1
+        else:
+            left_block = 0
+            for block_x in range(len(self.shape[0])):
+                for block_y in range(len(self.shape)):
+                    if self.shape[block_y][block_x]:
+                        left_block = block_x
+                        break
+            left_x = self.x + left_block * 8
+            while left_x < 0:
+                self.x += 1
+                left_x += 1
 
     def get_pixels(self):
         pixels = []

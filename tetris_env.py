@@ -5,25 +5,6 @@ from enum import IntEnum, auto
 import random
 
 CELL_SIZE = 4
-
-RGB_COLORS = {
-    Color.BLUE: {
-        'light': (),
-        'dark': ()
-    },
-    Color.RED: {
-        'light': (),
-        'dark': ()
-    },
-    Color.GREEN: {
-        'light': (),
-        'dark': ()
-    },
-    Color.YELLOW: {
-        'light': (),
-        'dark': ()
-    },
-}
         
 class Pixel():
 
