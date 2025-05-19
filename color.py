@@ -6,8 +6,6 @@ class Color(IntEnum):
     RED = auto()
     GREEN = auto()
     YELLOW = auto()
-    PURPLE = auto()
-    ORANGE = auto()
 
     @classmethod
     def random_color(cls):

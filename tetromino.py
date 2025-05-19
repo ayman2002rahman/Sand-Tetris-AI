@@ -68,8 +68,8 @@ class Tetromino:
                 if cell:
                     for dy in range(8):
                         for dx in range(8):
-                            px = self.x + block_x * 8 + dx
-                            py = self.y + block_y * 8 + dy
+                            px = self.position[0] + block_x * 8 + dx
+                            py = self.position[1] + block_y * 8 + dy
                             pixels.append((px, py))
         return pixels
 

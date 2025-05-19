@@ -5,33 +5,45 @@ from enum import IntEnum, auto
 import random
 
 CELL_SIZE = 4
-        
+
+RGB_COLORS = {
+    Color.BLUE: {
+        'light': (),
+        'dark': ()
+    },
+    Color.RED: {
+        'light': (),
+        'dark': ()
+    },
+    Color.GREEN: {
+        'light': (),
+        'dark': ()
+    },
+    Color.YELLOW: {
+        'light': (),
+        'dark': ()
+    },
+}
         
 class Pixel():
 
-    def __init__(self, color, rgb, position):
+    def __init__(self, color, color_class, position):
         self.color = color
-        self.rgb = rgb
+        self.color_class = color_class
         self.position = position # (x, y) tuple
 
 
 class Tetris_Env():
-
-    tetrominoe_set = set()
 
     def __init__(self, position, size):
         self.position = position
         self.size = size # (width, height)
         #sand will contain only the current sand pixels
         self.sand = [[None for j in range(self.size[0])] for i in range(self.size[1])]
-        TETROMINOE_SIZE = 12 # even number please
-        # default block:
-        block_color = Color.random_color()
-        color_rgb = {1: (53, 89, 144), 2: (164, 65, 47), 3: (97, 152, 74), 4: (204, 154, 52), 5: (145, 128, 196), 6: (255, 127, 39)}
         
 
-        self.tetrominoe = None
-        self.next_tetrominoe = None
+        self.tetromino = None
+        self.next_tetromino = None
         self.score = 0
 
     def reset(self):
@@ -43,7 +55,6 @@ class Tetris_Env():
         # 2) blue
         # 3) green
         # 4) yellow
-        # 5) 
         pass
 
     def pixel_at(self, x, y): # helper function to get the sandf pizxel at i=y and j=x
@@ -130,11 +141,46 @@ class Tetris_Env():
                     current_color = pixel.color
             return wall
                 
+        def collides():
+            for x, y in self.tetromino.get_pixels():
+                for dx, dy in [(0, 1), (-1, 0), (1, 0)]:
+                    nx, ny = x + dx, y + dy
+                    if ny >= self.size[1]:
+                        return True
+                if 0 <= nx and nx < self.size[0] and self.pixel_at(nx, ny):
+                    return True
+            return False
+        
         # --- STEP FUNCTION LOGIC ---
 
         # 1.) handle input action logic here
 
-        # 2.) 
+
+        # 2.) Check tetromino collision
+        if collides():
+            color = self.tetromino.color
+
+            for block_y, row in enumerate(self.tetromino.shape):
+                for block_x, cell in enumerate(row):
+                    if not cell:
+                        continue
+
+                    base_x = self.position[0] + block_x * 8
+                    base_y = self.position[1] + block_y * 8
+
+                    for dy in range(8):
+                        for dx in range(8):
+                            px = base_x + dx
+                            py = base_y + dy
+
+                            # distance from nearest outer edge
+                            ring = min(dx, 7 - dx, dy, 7 - dy)
+                            # ring 0 = outermost, 1 = next, 2 = next, 3 = center
+                            shade = ["dark", "medium", "dark", "light"][ring]
+
+                            self.sand[py][px] = Pixel(color, shade, (px, py))
+
+                                
 
         # 3.) sand physics
         for y in range(self.size[1]-1, -1, -1): # bottom up
