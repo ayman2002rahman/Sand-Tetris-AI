@@ -47,11 +47,12 @@ class Tetromino_Shapes(Enum):
 class Tetromino:
     def __init__(self, position, grid_width):
         self.position = position
-        self.shape = Tetromino_Shapes.random_shape()
-        for _ in range(random.randint(3)):
-            self.rotate()
-        self.color = Color.random_color()
+        shape_enum = Tetromino_Shapes.random_shape()
+        self.shape = [row[:] for row in shape_enum.value]
         self.grid_width = grid_width
+        self.color = Color.random_color()
+        for _ in range(random.randint(0, 3)):
+            self.rotate()
 
     # will need to add logic to ensure that tetromino after rotation does not exit side boundaries
     # while trtromino too far right, shift it left
@@ -64,31 +65,33 @@ class Tetromino:
                 if self.shape[block_y][block_x]:
                     left_block = block_x
                     break
-        return self.x + left_block * 8
+        return self.position[0] + left_block * 8
 
     def right_most_x(self):
         right_block = 0
-        for block_x in range(len(self.shape[0]), -1, -1):
+        for block_x in range(len(self.shape[0])-1, -1, -1):
             for block_y in range(len(self.shape)):
                 if self.shape[block_y][block_x]:
                     right_block = block_x
                     break
-        return self.x + right_block * 8 + 7
+        return self.position[0] + right_block * 8 + 7
 
     def rotate(self):
-        t = self.shape.copy()
+        t = self.shape
         t = [list(row) for row in zip(*t[::-1])]
-        self.shape = t.copy()
+        self.shape = t
 
         right_x = self.right_most_x()
         if right_x >= self.grid_width:
             while right_x >= self.grid_width:
-                self.x -= 1
+                x, y = self.position
+                self.position = (x - 1, y)
                 right_x -= 1
         else:
             left_x = self.left_most_x()
             while left_x < 0:
-                self.x += 1
+                x, y = self.position
+                self.position = (x + 1, y)
                 left_x += 1
 
     def get_pixels(self):

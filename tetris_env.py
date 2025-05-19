@@ -30,9 +30,8 @@ class Tetris_Env():
         #sand will contain only the current sand pixels
         self.sand = [[None for j in range(self.size[0])] for i in range(self.size[1])]
         
-
-        self.tetromino = None
-        self.next_tetromino = None
+        self.tetromino = Tetromino((10, 0), self.size[0])
+        self.next_tetromino = Tetromino((10, 0), self.size[0])
         self.score = 0
 
     def reset(self):
@@ -71,13 +70,13 @@ class Tetris_Env():
         #                 return True
         #         if 0 <= nx and nx < self.size[0] and self.pixel_at(nx, ny):
         #             return True
-        #     return False      
+        #     return False
 
         return valid_actions
 
     def step(self, action):
         # 1.) handle action logic
-        # 2.) Chekc tetromino collision
+        # 2.) Check tetromino collision
         # 3.) update sand physics 
         # 4.) check for a match
 
@@ -169,31 +168,36 @@ class Tetris_Env():
         # --- STEP FUNCTION LOGIC ---
 
         # 1.) handle input action logic here
-
+        x, y = self.tetromino.position
+        self.tetromino.position = (x, y + 1)
 
         # 2.) Check tetromino collision
         if collides():
             color = self.tetromino.color
+
+            grid_h = len(self.sand)
+            grid_w = len(self.sand[0])
 
             for block_y, row in enumerate(self.tetromino.shape):
                 for block_x, cell in enumerate(row):
                     if not cell:
                         continue
 
-                    base_x = self.position[0] + block_x * 8
-                    base_y = self.position[1] + block_y * 8
+                    base_x = self.tetromino.position[0] + block_x * 8
+                    base_y = self.tetromino.position[1] + block_y * 8
 
                     for dy in range(8):
                         for dx in range(8):
                             px = base_x + dx
                             py = base_y + dy
 
-                            # distance from nearest outer edge
-                            ring = min(dx, 7 - dx, dy, 7 - dy)
-                            # ring 0 = outermost, 1 = next, 2 = next, 3 = center
-                            shade = ["dark", "medium", "dark", "light"][ring]
+                            # only lock into the sand grid if within bounds
+                            if 0 <= px < grid_w and 0 <= py < grid_h:
+                                ring = min(dx, 7 - dx, dy, 7 - dy)
+                                shade = ["dark", "medium", "dark", "light"][ring]
+                                self.sand[py][px] = Pixel(color, shade, (px, py))
 
-                            self.sand[py][px] = Pixel(color, shade, (px, py))
+            self.tetromino.position = (10, 0)
 
                                 
 
