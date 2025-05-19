@@ -1,24 +1,12 @@
 import pygame
+from color import Color
+from tetromino import Tetromino
 from enum import IntEnum, auto
 import random
-import numpy as np
 
 CELL_SIZE = 4
-
-class Color(IntEnum):
-    BLUE = auto()
-    RED = auto()
-    GREEN = auto()
-    YELLOW = auto()
-    PURPLE = auto()
-    ORANGE = auto()
-
-    @classmethod
-    def random_color(cls):
-        return random.choice(list(cls))
         
         
-
 class Pixel():
 
     def __init__(self, color, rgb, position):
@@ -26,26 +14,6 @@ class Pixel():
         self.rgb = rgb
         self.position = position # (x, y) tuple
 
-# Tried to make a tetrominoe class but didn't really work
-# class Tetrominoe():
-
-#     def __init__(self, size):
-#         # self.block = random.choice['O', 'L', 'J', 'T', 'I', 'S', 'Z']
-#         self.block = 'T'
-#         self.size = size
-#         #sand will contain only the current sand pixels
-#         self.sand = [[None for j in range(self.size[0])] for i in range(self.size[1])]
-
-#     def draw_block(self):
-#         block_color = Color.random_color()
-#         color_rgb = {1: (53, 89, 144), 2: (164, 65, 47), 3: (97, 152, 74), 4: (204, 154, 52), 5: (145, 128, 196), 6: (255, 127, 39)}
-#         if self.block == 'T':
-#             for i in range(0, 12):
-#                 for j in range(44, 56):
-#                     self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
-#             for i in range(12, 25):
-#                 for j in range(32, 68):
-#                     self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
 
 class Tetris_Env():
 
@@ -60,51 +28,7 @@ class Tetris_Env():
         # default block:
         block_color = Color.random_color()
         color_rgb = {1: (53, 89, 144), 2: (164, 65, 47), 3: (97, 152, 74), 4: (204, 154, 52), 5: (145, 128, 196), 6: (255, 127, 39)}
-        tetrominoe = random.choice(['O', 'L', 'J', 'T', 'I', 'S', 'Z'])
-        tetrominoe = 'T'
-        if tetrominoe == 'O':
-            for i in range(0, TETROMINOE_SIZE*2):
-                for j in range(int(size[0]/2) - TETROMINOE_SIZE, int(size[0]/2) + TETROMINOE_SIZE):
-                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
-        elif tetrominoe == 'L':
-            for i in range(0, TETROMINOE_SIZE*3):
-                for j in range(int(size[0]/2) - TETROMINOE_SIZE, int(size[0]/2)):
-                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
-            for i in range(TETROMINOE_SIZE*2, TETROMINOE_SIZE*3):
-                for j in range(int(size[0]/2), int(size[0]/2) + TETROMINOE_SIZE):
-                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
-        elif tetrominoe == 'J':
-            for i in range(0, TETROMINOE_SIZE*3):
-                for j in range(int(size[0]/2), int(size[0]/2) + TETROMINOE_SIZE):
-                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
-            for i in range(TETROMINOE_SIZE*2, TETROMINOE_SIZE*3):
-                for j in range(int(size[0]/2) - TETROMINOE_SIZE, int(size[0]/2)):
-                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
-        elif tetrominoe == 'T':
-            for i in range(0, TETROMINOE_SIZE):
-                for j in range(int(size[0]/2) - int(TETROMINOE_SIZE/2), int(size[0]/2) + int(TETROMINOE_SIZE/2)):
-                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
-            for i in range(TETROMINOE_SIZE, (TETROMINOE_SIZE*2)+1):
-                for j in range(int(size[0]/2) - int(TETROMINOE_SIZE*3/2), int(size[0]/2) + int(TETROMINOE_SIZE*3/2)):
-                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
-        elif tetrominoe == 'I':
-            for i in range(0, TETROMINOE_SIZE*4):
-                for j in range(int(size[0]/2) - int(TETROMINOE_SIZE/2), int(size[0]/2) + int(TETROMINOE_SIZE/2)):
-                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
-        elif tetrominoe == 'S':
-            for i in range(0, TETROMINOE_SIZE):
-                for j in range(int(size[0]/2) - int(TETROMINOE_SIZE/2), int(size[0]/2) + int(TETROMINOE_SIZE*3/2)):
-                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
-            for i in range(TETROMINOE_SIZE, TETROMINOE_SIZE*2):
-                for j in range(int(size[0]/2) - int(TETROMINOE_SIZE*3/2), int(size[0]/2) + int(TETROMINOE_SIZE/2)):
-                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
-        elif tetrominoe == 'Z':
-            for i in range(0, TETROMINOE_SIZE):
-                for j in range(int(size[0]/2) - int(TETROMINOE_SIZE*3/2), int(size[0]/2) + int(TETROMINOE_SIZE/2)):
-                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
-            for i in range(TETROMINOE_SIZE, TETROMINOE_SIZE*2):
-                for j in range(int(size[0]/2) - int(TETROMINOE_SIZE/2), int(size[0]/2) + int(TETROMINOE_SIZE*3/2)):
-                    self.sand[i][j] = Pixel(block_color, color_rgb[block_color], (j, i))
+        
 
         self.tetrominoe = None
         self.next_tetrominoe = None
@@ -127,8 +51,9 @@ class Tetris_Env():
 
     def step(self, action):
         # 1.) handle action logic
-        # 2.) update sand physics 
-        # 3.) check for a match
+        # 2.) Chekc tetromino collision
+        # 3.) update sand physics 
+        # 4.) check for a match
 
         def set_cell(x, y, pixel):
             self.sand[y][x] = pixel
@@ -209,12 +134,14 @@ class Tetris_Env():
 
         # 1.) handle input action logic here
 
-        # 2.) sand physics
+        # 2.) 
+
+        # 3.) sand physics
         for y in range(self.size[1]-1, -1, -1): # bottom up
             for x in range(self.size[0]-1, -1, -1):
                 update_cell(x, y)
         
-        # 3.) check for a match (currently only handles one match at a time: does not handle if there are two matches made at the same exact time (very low chance))
+        # 4.) check for a match (currently only handles one match at a time: does not handle if there are two matches made at the same exact time (very low chance))
         
         wall = left_wall()
         for starting_y in wall:
@@ -224,6 +151,7 @@ class Tetris_Env():
                 # delete the pixels
                 for x, y in visited:
                     self.sand[y][x] = None
+                # This score value will depend on how many pixels were made in the match
                 self.score += 100 # add on score value of making a match
                 return visited
             
