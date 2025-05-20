@@ -5,9 +5,9 @@ from tetris_env import Tetris_Env, CELL_SIZE, ACTIONS
 from color import Color
 
 DISPLAY_SIZE = (1000, 1000)
-GAME_POSITION = (150, 200)
-WIDTH = 37
-HEIGHT = 60
+GAME_POSITION = (150, 70)
+WIDTH = 100
+HEIGHT = 200
 BORDER_THICKNESS = 5
 
 FLICKER_FREQUENCY = 3
@@ -97,26 +97,41 @@ def override_match_visual(env, visited):
 def main():
     env = Tetris_Env(GAME_POSITION, (WIDTH, HEIGHT))
 
-    flickering = False
-    visited = None
-    flick_frame = 3
-    flicks = 0
-    draw_white = False
+    flickering   = False
+    visited      = None
+    flick_frame  = 3
+    flicks       = 0
+    draw_white   = False
 
     while True:
+        action = None
 
+        # ——— handle quit and one-off rotate ———
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                action = 'rotate'
 
+        # ——— handle held keys for continuous move ———
+        pressed = pygame.key.get_pressed()
+        if not flickering and action is None:
+            if pressed[pygame.K_LEFT]:
+                action = 'left'
+            elif pressed[pygame.K_RIGHT]:
+                action = 'right'
+            elif pressed[pygame.K_DOWN]:
+                action = 'down'
+
+        # ——— advance the game ———
         draw_game(env)
-
         if not flickering:
-            visited = env.step('right')
+            visited = env.step(action)
             if visited:
                 flickering = True
         else:
+            # flicker logic unchanged...
             if flicks <= FLICKER_FREQUENCY:
                 if draw_white:
                     draw_match_visual(env, visited)
@@ -137,6 +152,8 @@ def main():
 
         pygame.display.flip()
         clock.tick(30)
+
+
 
 if __name__ == '__main__':
     main()

@@ -169,6 +169,16 @@ class Tetris_Env():
 
         # 1.) handle input action logic here
         x, y = self.tetromino.position
+
+        if action == 'left':
+            x -= 1
+        elif action == 'right':
+            x += 1
+        elif action == 'rotate':
+            self.tetromino.rotate()
+        elif action == 'down':
+            y += 1
+
         self.tetromino.position = (x, y + 1)
 
         # 2.) Check tetromino collision
@@ -197,7 +207,7 @@ class Tetris_Env():
                                 shade = ["dark", "medium", "dark", "light"][ring]
                                 self.sand[py][px] = Pixel(color, shade, (px, py))
 
-            self.tetromino.position = (10, 0)
+            self.tetromino = Tetromino((10, 0), self.size[0])
 
                                 
 
