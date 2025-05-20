@@ -171,9 +171,15 @@ class Tetris_Env():
         x, y = self.tetromino.position
 
         if action == 'left':
-            x -= 1
+            x -= 2
         elif action == 'right':
-            x += 1
+            x += 2
+        elif action == 'left-down':
+            x -= 2
+            y += 1
+        elif action == 'right-down':
+            x += 2
+            y += 1
         elif action == 'rotate':
             self.tetromino.rotate()
         elif action == 'down':
