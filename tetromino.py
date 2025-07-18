@@ -59,21 +59,19 @@ class Tetromino:
     # while tetromino too far left, shift it right
     # check its left-msot and right most-cells
     def left_most_x(self):
-        left_block = 0
+        left_block = 2
         for block_x in range(len(self.shape[0])):
             for block_y in range(len(self.shape)):
                 if self.shape[block_y][block_x]:
-                    left_block = block_x
-                    break
-        return self.position[0] + left_block * 8
+                    left_block = min(left_block, block_x)
+        return self.position[0] + (left_block - 0)* 8
 
     def right_most_x(self):
         right_block = 0
         for block_x in range(len(self.shape[0])-1, -1, -1):
             for block_y in range(len(self.shape)):
                 if self.shape[block_y][block_x]:
-                    right_block = block_x
-                    break
+                    right_block = max(right_block, block_x)
         return self.position[0] + right_block * 8 + 7
 
     def rotate(self):

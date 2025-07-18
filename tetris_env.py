@@ -21,7 +21,7 @@ class Pixel():
         self.color_class = color_class
         self.position = position # (x, y) tuple
 
-
+# also pass in seed to generate random tetrominos so two different envs can follow same tetromino sequence
 class Tetris_Env():
 
     def __init__(self, position, size):
@@ -165,27 +165,80 @@ class Tetris_Env():
                     return True
             return False
         
+        def try_move(dx, dy):
+            """Attempt to move by (dx,dy), revert and return False if colliding."""
+            orig = self.tetromino.position
+            new_pos = (orig[0] + dx, orig[1] + dy)
+            self.tetromino.position = new_pos
+            if collides():
+                self.tetromino.position = orig
+                return False
+            return True
+        
         # --- STEP FUNCTION LOGIC ---
-
-        # 1.) handle input action logic here
         x, y = self.tetromino.position
 
-        if action == 'left':
-            x -= 2
-        elif action == 'right':
-            x += 2
-        elif action == 'left-down':
-            x -= 2
-            y += 1
-        elif action == 'right-down':
-            x += 2
-            y += 1
-        elif action == 'rotate':
-            self.tetromino.rotate()
-        elif action == 'down':
-            y += 1
+        valid_actions = self.valid_actions()
+        # determine deltas
+        if action in valid_actions:
+            if action == 'left':
+                h_move = -2
+                v_move = 1
+            elif action == 'right':
+                h_move = 2
+                v_move = 1
+            elif action == 'left-down':
+                h_move = -2
+                v_move = 1
+            elif action == 'right-down':
+                h_move = 2
+                v_move = 1
+            elif action == 'down':
+                h_move = 0
+                v_move = 1
+            elif action == 'rotate':
+                self.tetromino.rotate()
+                h_move = 0
+                v_move = 1
+            else:
+                h_move = 0
+                v_move = 1
+        else:
+            h_move = 0
+            v_move = 1
 
-        self.tetromino.position = (x, y + 1)
+        # 1) Horizontal phase: try 2px, then 1px, then stay
+        if h_move != 0:
+            if not try_move(h_move, 0):
+                sign = 1 if h_move > 0 else -1
+                # fallback to 1px
+                if not try_move(sign, 0):
+                    # blocked: no horizontal move at all
+                    pass
+
+        # 2) Vertical phase: always try 1px down
+        if not try_move(0, v_move):
+            # collided downward → lock & spawn
+            color   = self.tetromino.color
+            grid_h  = len(self.sand)
+            grid_w  = len(self.sand[0])
+            # lock into sand exactly as before
+            for by, row in enumerate(self.tetromino.shape):
+                for bx, cell in enumerate(row):
+                    if not cell: continue
+                    base_x = self.tetromino.position[0] + bx * 8
+                    base_y = self.tetromino.position[1] + by * 8
+                    for dy in range(8):
+                        for dx in range(8):
+                            px = base_x + dx
+                            py = base_y + dy
+                            if 0 <= px < grid_w and 0 <= py < grid_h:
+                                ring  = min(dx, 7-dx, dy, 7-dy)
+                                shade = ["dark","medium","dark","light"][ring]
+                                self.sand[py][px] = Pixel(color, shade, (px,py))
+            # spawn next piece
+            self.tetromino = Tetromino((10,0), self.size[0])
+
 
         # 2.) Check tetromino collision
         if collides():
@@ -234,6 +287,6 @@ class Tetris_Env():
                     self.sand[y][x] = None
                 # This score value will depend on how many pixels were made in the match
                 self.score += 100 # add on score value of making a match
-                return visited
+                return visited, False
             
-        return None
+        return None, False
