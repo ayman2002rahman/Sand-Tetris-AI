@@ -5,6 +5,7 @@ from enum import IntEnum, auto
 import random
 
 CELL_SIZE = 4
+MAX_BOUND = 10
         
 ACTIONS = [
     "right",
@@ -266,16 +267,21 @@ class Tetris_Env():
                                 shade = ["dark", "medium", "dark", "light"][ring]
                                 self.sand[py][px] = Pixel(color, shade, (px, py))
 
-            self.tetromino = Tetromino((10, 0), self.size[0])
-
-                                
+            self.tetromino = self.next_tetromino
+            self.next_tetromino = Tetromino((10, 0), self.size[0]) 
 
         # 3.) sand physics
         for y in range(self.size[1]-1, -1, -1): # bottom up
             for x in range(self.size[0]-1, -1, -1):
                 update_cell(x, y)
+
+        # 4.) Check if sand exists above max bound
+        # iterate through row of maxbound to see if any sand exists there
+        for x in range(self.size[0]):
+            if self.sand[x][MAX_BOUND]:
+                return None, True, -100
         
-        # 4.) check for a match (currently only handles one match at a time: does not handle if there are two matches made at the same exact time (very low chance))
+        # 5.) check for a match (currently only handles one match at a time: does not handle if there are two matches made at the same exact time (very low chance))
         
         wall = left_wall()
         for starting_y in wall:
@@ -287,6 +293,6 @@ class Tetris_Env():
                     self.sand[y][x] = None
                 # This score value will depend on how many pixels were made in the match
                 self.score += 100 # add on score value of making a match
-                return visited, False
+                return visited, False, 50
             
         return None, False
